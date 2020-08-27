@@ -9,9 +9,7 @@ function generateTxtResult(invoice, plays) {
     for (let perf of invoice.performances) {
         const play = plays[perf.playID];
         let thisAmount = calculateAmount(play, perf);
-        // add volume credits
         volumeCredits += calculateVolumeCredits(perf, play);
-        //print line for this order
         result += ` ${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
         totalAmount += thisAmount;
     }
