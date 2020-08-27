@@ -1,5 +1,5 @@
 const test = require('ava')
-const {statement} = require('../src/statement');
+const {statement, statementHtml} = require('../src/statement');
 
 const plays = {
   'hamlet': {
@@ -50,7 +50,6 @@ test('statement test. Customer BigCo watch performance hamlet with 31 audiences'
                   'You earned 1 credits \n');
 });
 
-
 test('statement test. Customer BigCo watch performance as-like with 20 audiences', t=> {
     const invoice = {
         'customer': 'BigCo',
@@ -68,7 +67,6 @@ test('statement test. Customer BigCo watch performance as-like with 20 audiences
                   'You earned 4 credits \n');
 });
 
-
 test('statement test. Customer BigCo watch performance as-like with 21 audiences', t=> {
     const invoice = {
         'customer': 'BigCo',
@@ -85,7 +83,6 @@ test('statement test. Customer BigCo watch performance as-like with 21 audiences
                   'Amount owed is $468.00\n' +
                   'You earned 4 credits \n');
 });
-
 
 test('statement test. Customer BigCo watch no performance', t=> {
     const invoice = {
@@ -119,6 +116,26 @@ test('statement test. Customer BigCo watch type tragedy1 hamlet with 20 audience
     } catch(e) {
         t.is(e.message, 'unknown type: tragedy1');
     }
+});
+
+test('statementHtml test. Customer BigCo watch hamlet with 20 audiences', t=> {
+    const invoice = {
+        'customer': 'BigCo',
+        'performances': [
+            {
+                'playID': 'hamlet',
+                'audience': 20,
+            }
+           ]
+    };
+    let result = statementHtml(invoice, plays);
+    t.is(result, '<h1>Statement for BigCo</h1>\n' +
+        '<table>\n' +
+        '<tr><th>play</th><th>seats</th><th>cost</th></tr>' +
+        ' <tr><td>Hamlet</td><td>20</td><td>$400.00</td></tr>\n' +
+        '</table>\n' +
+        '<p>Amount owed is <em>$400.00</em></p>\n' +
+        '<p>You earned <em>0</em> credits</p>\n');
 });
 
 
