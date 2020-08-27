@@ -1,19 +1,23 @@
 function statement (invoice, plays) {
-  let totalAmount = 0;
-  let volumeCredits = 0;
-  let result = `Statement for ${invoice.customer}\n`;
-  for (let perf of invoice.performances) {
-    const play = plays[perf.playID];
-    let thisAmount = calculateAmount(play, perf);
-    // add volume credits
-    volumeCredits += calculateVolumeCredits(perf, play);
-    //print line for this order
-    result += ` ${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
-    totalAmount += thisAmount;
-  }
-  result += `Amount owed is ${format(totalAmount / 100)}\n`;
-  result += `You earned ${volumeCredits} credits \n`;
-  return result;
+  return generateTxtResult(invoice, plays);
+}
+
+function generateTxtResult(invoice, plays) {
+    let totalAmount = 0;
+    let volumeCredits = 0;
+    let result = `Statement for ${invoice.customer}\n`;
+    for (let perf of invoice.performances) {
+        const play = plays[perf.playID];
+        let thisAmount = calculateAmount(play, perf);
+        // add volume credits
+        volumeCredits += calculateVolumeCredits(perf, play);
+        //print line for this order
+        result += ` ${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
+        totalAmount += thisAmount;
+    }
+    result += `Amount owed is ${format(totalAmount / 100)}\n`;
+    result += `You earned ${volumeCredits} credits \n`;
+    return result;
 }
 
 const format = new Intl.NumberFormat('en-US', {
