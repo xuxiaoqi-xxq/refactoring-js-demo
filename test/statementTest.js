@@ -1,5 +1,5 @@
 const test = require('ava')
-const {statement, statementHtml} = require('../src/statement');
+const {statement} = require('../src/statement');
 
 const plays = {
   'hamlet': {
@@ -116,26 +116,6 @@ test('statement test. Customer BigCo watch type tragedy1 hamlet with 20 audience
     } catch(e) {
         t.is(e.message, 'unknown type: tragedy1');
     }
-});
-
-test('statementHtml test. Customer BigCo watch hamlet with 20 audiences', t=> {
-    const invoice = {
-        'customer': 'BigCo',
-        'performances': [
-            {
-                'playID': 'hamlet',
-                'audience': 20,
-            }
-           ]
-    };
-    let result = statementHtml(invoice, plays);
-    t.is(result, '<h1>Statement for BigCo</h1>\n' +
-        '<table>\n' +
-        '<tr><th>play</th><th>seats</th><th>cost</th></tr>' +
-        ' <tr><td>Hamlet</td><td>20</td><td>$400.00</td></tr>\n' +
-        '</table>\n' +
-        '<p>Amount owed is <em>$400.00</em></p>\n' +
-        '<p>You earned <em>0</em> credits</p>\n');
 });
 
 
