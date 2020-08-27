@@ -3,26 +3,29 @@ function statement (invoice, plays) {
 }
 
 function generateTxtResult(invoice, plays) {
+    let calculateResult = calculate(invoice, plays);
+    let txtResult = `Statement for ${invoice.customer}\n`;
+    for (let perf of calculateResult.performances) {
+        txtResult += ` ${perf.playName}: ${format(perf.amount)} (${perf.seats} seats)\n`;
+    }
+    txtResult += `Amount owed is ${format(calculateResult.totalAmount)}\n`;
+    txtResult += `You earned ${calculateResult.volumeCredits} credits \n`;
+    return txtResult;
+}
+
+function calculate(invoice, plays) {
     let totalAmount = 0;
     let volumeCredits = 0;
-    let result = `Statement for ${invoice.customer}\n`;
+    let performances = [];
     for (let perf of invoice.performances) {
         const play = plays[perf.playID];
         let thisAmount = calculateAmount(play, perf);
         volumeCredits += calculateVolumeCredits(perf, play);
-        result += ` ${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
+        performances.push({'playName':play.name, 'amount': thisAmount / 100, 'seats': perf.audience});
         totalAmount += thisAmount;
     }
-    result += `Amount owed is ${format(totalAmount / 100)}\n`;
-    result += `You earned ${volumeCredits} credits \n`;
-    return result;
+    return {'performances': performances, 'totalAmount': totalAmount / 100, 'volumeCredits': volumeCredits};
 }
-
-const format = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 2,
-      }).format;
 
 function calculateAmount(play, perf) {
     let thisAmount = 0;
@@ -53,6 +56,12 @@ function calculateVolumeCredits(perf, play) {
     if ('comedy' === play.type) volumeCredits += Math.floor(perf.audience / 5);
     return volumeCredits;
 }
+
+const format = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+      }).format;
 
 module.exports = {
   statement,
