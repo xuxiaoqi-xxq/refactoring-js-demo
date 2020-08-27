@@ -6,9 +6,7 @@ function statement (invoice, plays) {
     const play = plays[perf.playID];
     let thisAmount = calculateAmount(play, perf);
     // add volume credits
-    volumeCredits += Math.max(perf.audience - 30, 0);
-    // add extra credit for every ten comedy attendees
-    if ('comedy' === play.type) volumeCredits += Math.floor(perf.audience / 5);
+    volumeCredits += calculateVolumeCredits(perf, play);
     //print line for this order
     result += ` ${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
     totalAmount += thisAmount;
@@ -44,6 +42,14 @@ function calculateAmount(play, perf) {
             throw new Error(`unknown type: ${play.type}`);
         }
     return thisAmount;
+}
+
+function calculateVolumeCredits(perf, play) {
+    // add volume credits
+    let volumeCredits = Math.max(perf.audience - 30, 0);
+    // add extra credit for every ten comedy attendees
+    if ('comedy' === play.type) volumeCredits += Math.floor(perf.audience / 5);
+    return volumeCredits;
 }
 
 module.exports = {
